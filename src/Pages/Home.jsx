@@ -1,5 +1,11 @@
+import UserSearch from '../components/Users/UserSearch';
+
 function Home() {
-  return <div>Home</div>;
+  return (
+    <>
+      <UserSearch />
+    </>
+  );
 }
 
 export default Home;
