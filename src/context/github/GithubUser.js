@@ -1,48 +1,43 @@
 import { createContext, useReducer } from 'react';
 import githubReducer from './GithubReducer';
 
-const GithubUserContext = createContext();
+const GithubContext = createContext();
 
 const github_url = process.env.REACT_APP_GITHUB_URL;
 const github_token = process.env.REACT_APP_GITHUB_TOKEN;
 
-export default GithubProvider = ({ children }) => {
-  
-
-  //for reducer we first have to intialize the value 
+export const GithubProvider = ({ children }) => {
+  //for reducer we first have to intialize the value
   const initialState = {
     users: [],
-    loading:false
-  }
+    loading: false,
+  };
 
-  const [state, dispatch] = useReducer(githubReducer, initialState)
-    
-    //search for the use
+  const [state, dispatch] = useReducer(githubReducer, initialState);
+
+  //search for the use
   const searchUser = async (text) => {
-    
     const params = new URLSearchParams({
-      q:text
-    })
+      q: text,
+    });
 
-    const res = await fetch(`${github_url}/users?${params}`)
-    const data = await res.json()
+    const res = await fetch(`${github_url}/users?${params}`, {
+      Authorization: {
+        headers: `token ${github_token}`,
+      },
+    });
+    const data = await res.json();
 
-    dispatch = ({
-      type: 'GET_USER',
-      payload:data
-    })
+    dispatch({
+      type: 'GET_USERS',
+      payload: data,
+    });
+  };
+  return (
+    <GithubContext.Provider value={{ users: state.users, searchUser }}>
+      {children}
+    </GithubContext.Provider>
+  );
+};
 
-
-
-
-
-    }
-
-
-  <GithubUserContext.Provider>
-    {children}
-  </GithubUserContext.Provider>
-}
-
-
-export default GithubUserContext;
+export default GithubContext;
