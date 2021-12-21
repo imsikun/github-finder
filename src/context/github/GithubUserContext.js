@@ -10,6 +10,7 @@ export const GithubProvider = ({ children }) => {
   //for reducer we first have to intialize the value
   const initialState = {
     users: [],
+    user: {},
     loading: false,
   };
 
@@ -42,6 +43,25 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
+  const getUser = async (login) => {
+    setLoading();
+    const res = await fetch(`${github_url}/users/${login}`, {
+      Authorization: {
+        headers: `token ${github_token}`,
+      },
+    });
+
+    if (res.status === 404) {
+      window.location = '/notfound';
+    } else {
+      const data = await res.json();
+      dispatch({
+        type: 'GET_USER',
+        payload: data,
+      });
+    }
+  };
+
   const setLoading = () => {
     dispatch({
       type: 'SET_LOADING',
@@ -50,7 +70,14 @@ export const GithubProvider = ({ children }) => {
 
   return (
     <GithubContext.Provider
-      value={{ users: state.users, searchUser, clearUser }}
+      value={{
+        users: state.users,
+        user: state.user,
+        loading: state.loading,
+        searchUser,
+        clearUser,
+        getUser,
+      }}
     >
       {children}
     </GithubContext.Provider>
