@@ -7,21 +7,30 @@ import About from './Pages/About';
 import Author from './Pages/Author';
 import NotFound from './Pages/NotFound';
 
+import { GithubProvider } from './context/github/GithubUserContext';
+import { AlertProvider } from './context/Alert/AlertContext';
+import Alert from './components/Layout/Alert';
+
 function App() {
   return (
-    <div className='flex flex-col justify-between h-screen'>
-      <Navbar />
-      <main className='container text-center mx-auto'>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/author' element={<Author />} />
-          <Route path='/notfound' element={<NotFound />} />
-          <Route path='/*' element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <GithubProvider>
+      <AlertProvider>
+        <div className='flex flex-col justify-between h-screen'>
+          <Navbar />
+          <main className='container mx-auto px-3 pb-3'>
+            <Alert />
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/about' element={<About />} />
+              <Route path='/author' element={<Author />} />
+              <Route path='/notfound' element={<NotFound />} />
+              <Route path='/*' element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </AlertProvider>
+    </GithubProvider>
   );
 }
 
