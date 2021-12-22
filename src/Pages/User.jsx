@@ -1,19 +1,26 @@
-import { FaCodepen, FaUserFriends, FaUsers } from 'react-icons/fa';
+import { FaCodepen, FaUserFriends, FaUsers, FaArrowLeft } from 'react-icons/fa';
 import { useContext, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import GithubContext from '../context/github/GithubUserContext';
+import { getUserAndRepos } from '../context/github/GithubActions';
 
 import Spinner from '../components/Layout/Spinner';
 import RepoList from '../components/repos/RepoList';
 
 function User() {
-  const { user, loading, getUser } = useContext(GithubContext);
+  const { user, loading, repos, dispatch } = useContext(GithubContext);
 
   const params = useParams();
 
   useEffect(() => {
-    getUser(params.login);
-  }, []);
+    dispatch({ type: 'SET_LOADING' });
+    const getUserData = async () => {
+      const userData = await getUserAndRepos(params.login);
+      dispatch({ type: 'GET_USER_AND_REPOS', payload: userData });
+    };
+
+    getUserData();
+  }, [dispatch, params.login]);
 
   const {
     name,
@@ -40,6 +47,7 @@ function User() {
     <div className='w-full mx-auto lg:w-10/12'>
       <div className='mb-4'>
         <Link to={'/'} className='btn btn-primary rounded '>
+          <FaArrowLeft className='mr-3' />
           Go Back
         </Link>
       </div>
@@ -78,7 +86,12 @@ function User() {
             {hireable && <div className='mx-1 badge badge-info'>Hireable</div>}
             {bio ? <p>{bio}</p> : <p>No bio found</p>}
             <div className='mt-4 card-actions'>
-              <a href={html_url} rel='noreferrer' className='btn btn-outline'>
+              <a
+                href={html_url}
+                rel='noreferrer'
+                target='_blank'
+                className='btn btn-outline'
+              >
                 Visit Github Profile
               </a>
             </div>
@@ -178,7 +191,7 @@ function User() {
           </div>
         </div>
       </div>
-      <RepoList />
+      <RepoList repos={repos} />
     </div>
   );
 }
