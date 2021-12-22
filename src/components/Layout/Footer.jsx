@@ -3,9 +3,33 @@ function Footer() {
 
   return (
     <div className='footer footer-center p-5 bg-gray-700 text-primary-content'>
-      <p>
-        {/* TODO: to put links to each 'react', 'tailwindcss' and put the love emo at the end */}
-        Made with React, GithubApi, TailwindCss & with lov
+      <p className='inline text-lg'>
+        Made with{' '}
+        <a
+          href='https://beta.reactjs.org'
+          className='mx-3 link'
+          rel='noreferrer'
+          target='_blank'
+        >
+          React
+        </a>
+        <a
+          href='https://docs.github.com/en/rest'
+          rel='noreferrer'
+          target={'_blank'}
+          className='mx-3 link'
+        >
+          GithubApi
+        </a>
+        <a
+          href='https://tailwindcss.com/'
+          rel='noreferrer'
+          target={'_blank'}
+          className='mx-3 link'
+        >
+          TailwindCss
+        </a>
+        & with love ❤️
       </p>
       <p>Copyright &copy; {footerYear}. All Rights Reserved</p>
     </div>
